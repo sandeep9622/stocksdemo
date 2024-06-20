@@ -14,6 +14,7 @@ import { SharedModule } from './shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import {MatIconModule} from '@angular/material/icon';
 import { AllocationSplitterComponent } from './allocation-splitter/allocation-splitter.component';
 import { LayoutModule } from './layout/layout.module';
 import { PortfolioTrackerComponent } from './portfolio-tracker/portfolio-tracker.component';
@@ -42,7 +43,8 @@ import { PortfolioTrackerComponent } from './portfolio-tracker/portfolio-tracker
     MatDialogModule,
     LayoutModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -74,67 +74,70 @@
             </div>
         </div>
     </form>
-
-    <div class="card" style="margin-top: 2em;">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <div class="card" style="margin-top: 2em;" #TABLE>
         <div class="row">
-            <h3>Available Stocks</h3>
+            <h3 style="flex: 1; margin: 0;width: 80%;">Available Stocks</h3>
+            <button class="excel-button btn btn-primary" (click)="exportAsExcel()">
+                <mat-icon aria-hidden="false" aria-label="icon name">save_alt</mat-icon>
+            </button>
         </div>
-        <table mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort >
+        <table mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="SerialNo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  No.
+                    No.
                 </th>
                 <td mat-cell *matCellDef="let element;let i = index"> {{i + 1}} </td>
-              </ng-container>
-              <ng-container matColumnDef="stockName">
+            </ng-container>
+            <ng-container matColumnDef="stockName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Stock Name
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.stockName}} </td>
-              </ng-container>
-              <ng-container matColumnDef="price">
+            </ng-container>
+            <ng-container matColumnDef="price">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Price
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.price}} </td>
-              </ng-container>
-              <ng-container matColumnDef="quantity">
+            </ng-container>
+            <ng-container matColumnDef="quantity">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Quantity
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
-              </ng-container>
-              <ng-container matColumnDef="sector">
+            </ng-container>
+            <ng-container matColumnDef="sector">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Sector
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.sector}} </td>
-              </ng-container>
-              <ng-container matColumnDef="marketCap">
+            </ng-container>
+            <ng-container matColumnDef="marketCap">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Market Cap
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.marketCap}} </td>
-              </ng-container>
-              <ng-container matColumnDef="totalInvestment">
+            </ng-container>
+            <ng-container matColumnDef="totalInvestment">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Total Investment
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.totalInvestment}} </td>
-              </ng-container>
-              <ng-container matColumnDef="currentPrice">
+            </ng-container>
+            <ng-container matColumnDef="currentPrice">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Current Price
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.currentPrice}} </td>
-              </ng-container>
-              <ng-container matColumnDef="currentValue">
+            </ng-container>
+            <ng-container matColumnDef="currentValue">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Current Value
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.currentValue}} </td>
-              </ng-container>
-              <ng-container matColumnDef="actions">
+            </ng-container>
+            <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef style="width:15%">
                     Actions
                 </th>
@@ -142,9 +145,9 @@
                     <button type="button" class="btn btn-primary" (click)="Edit(element)">Edit</button>
                     <button type="button" class="btn btn-danger" (click)="Delete(element.id)">Delete</button>
                 </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
 
@@ -160,6 +163,10 @@
             <div class="col-sm-6">Total Investments</div>
             <div class="col-sm-6">{{totalAmount}}</div>
         </div>
+        <div class="row">
+            <div class="col-sm-6">Current Value</div>
+            <div class="col-sm-6">{{currentValue}}</div>
+        </div>
     </div>
 
     <div class="card" style="margin-top:2em;">
@@ -174,7 +181,7 @@
                 <div echarts [options]="chartOption" class="demo-chart"></div>
             </div>
         </div>
-        
+
     </div>
     <div class="card" style="margin-top:2em;">
         <div class="row">

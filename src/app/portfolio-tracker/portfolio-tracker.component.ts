@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort,Sort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { EChartsOption } from 'echarts';
 import { Constants } from '../config/constants';
 import { Stock } from '../models/Stock';
@@ -10,6 +10,7 @@ import { JSONService } from '../services/json.service';
 import { UtilitiesService } from '../services/utilities.service';
 import { ConfirmationBoxComponent } from '../shared/confirmation-box/confirmation-box.component';
 import { MatTableDataSource } from '@angular/material/table';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-portfolio-tracker',
@@ -25,25 +26,27 @@ export class PortfolioTrackerComponent {
     marketCap: ['', [Validators.required]],
     totalInvestment: ['', [Validators.required]],
     currentPrice: [''],
-    id: [{value:'',disabled:true}]
+    id: [{ value: '', disabled: true }]
   });
 
   stocksList: Stock[] = [];
   submitted: boolean = false;
   isEdit: boolean = false;
-  displayedColumns:String[] = ["SerialNo","stockName","quantity","price","totalInvestment","currentPrice","currentValue","marketCap","sector","actions"];
-  dataSource!:MatTableDataSource<Stock>;
+  displayedColumns: String[] = ["SerialNo", "stockName", "quantity", "price", "totalInvestment", "currentPrice", "currentValue", "marketCap", "sector", "actions"];
+  dataSource!: MatTableDataSource<Stock>;
   localStorageName: string = 'StocksList';
 
   onlyNumeric = this.service.integerValidation;
   numericDecimal = this.service.decimalValidation;
 
   totalAmount: number = 0;
+  currentValue: number = 0;
 
   chartOption: EChartsOption = {};
   chartOptionBar: EChartsOption = {};
   chartOptionCompare: EChartsOption = {};
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('TABLE') table!: ElementRef;
 
   constructor(public json: JSONService, private fb: UntypedFormBuilder, public service: UtilitiesService, private httpService: HttpService, public dialog: MatDialog) { }
 
@@ -137,8 +140,12 @@ export class PortfolioTrackerComponent {
   calculateTotalAmount() {
     this.totalAmount = 0;
     if (this.stocksList?.length > 0) {
-      this.stocksList.forEach(e => this.totalAmount = e.totalInvestment + this.totalAmount);
+      this.stocksList.forEach(e => {
+        this.totalAmount = e.totalInvestment + this.totalAmount;
+        this.currentValue = (e.currentPrice * e.quantity) + this.currentValue;
+      });
       this.totalAmount = Number(this.totalAmount.toFixed(2));
+      this.currentValue = Number(this.currentValue.toFixed(2));
     }
   }
 
@@ -174,9 +181,9 @@ export class PortfolioTrackerComponent {
       this.chartOptionBar = {
         xAxis: {
           data: this.stocksList.map(x => x.stockName),
-          axisLabel:{
-            interval:0,
-            rotate:45
+          axisLabel: {
+            interval: 0,
+            rotate: 45
           }
         },
         yAxis: {
@@ -187,19 +194,19 @@ export class PortfolioTrackerComponent {
           trigger: 'item'
         },
         series:
-          {
-            type: 'bar',
-            data: this.stocksList.map(x => x.totalInvestment),
-          }
+        {
+          type: 'bar',
+          data: this.stocksList.map(x => x.totalInvestment),
+        }
       };
-      
+
 
       this.chartOptionCompare = {
         xAxis: {
           data: this.stocksList.map(x => x.stockName),
-          axisLabel:{
-            interval:0,
-            rotate:45
+          axisLabel: {
+            interval: 0,
+            rotate: 45
           }
         },
         yAxis: {
@@ -209,17 +216,26 @@ export class PortfolioTrackerComponent {
         tooltip: {
           trigger: 'item'
         },
-        series:[
+        series: [
           {
             type: 'bar',
             data: this.stocksList.map(x => x.totalInvestment),
           },
           {
-            type:'bar',
-            data:this.stocksList.map(x => x.currentPrice * x.quantity)
+            type: 'bar',
+            data: this.stocksList.map(x => x.currentPrice * x.quantity)
           }
         ]
       };
     }
+  }
+
+  exportAsExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, 'SheetJS.xlsx');
   }
 }
