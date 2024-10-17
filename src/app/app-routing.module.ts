@@ -4,12 +4,14 @@ import { AllocationSplitterComponent } from './allocation-splitter/allocation-sp
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { PortfolioTrackerComponent } from './portfolio-tracker/portfolio-tracker.component';
+import { FinancialCalculatorsComponent } from './financial-calculators/financial-calculators.component';
 
 const routes: Routes = [
   {path:'home',component:HomeComponent},
   {path:'login',component:LoginComponent},
   {path:'allocationsplitter',component:AllocationSplitterComponent},
   {path:'portfoliotracker',component:PortfolioTrackerComponent},
+  {path:'financialcalculators',component:FinancialCalculatorsComponent},
   {path:'',redirectTo:'home',pathMatch:'full'},
   {path:'**',redirectTo:'login'}
 ];
