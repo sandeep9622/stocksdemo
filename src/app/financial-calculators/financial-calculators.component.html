@@ -4,36 +4,30 @@
             <div>
                 <h1>Lump Sum Calculator</h1>
                 <form class="card" style="overflow-x: hidden!important;">
-                    <div class="row">
+                    <div class="row padding-1em">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Invested amount</label>
                                 <input type="text" (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                    class="form-control form-control-sm">
-                                <span class="text-danger">Stock Name is
-                                    Required</span>
+                                    (keypress)="numericDecimal($event)" class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row padding-1em">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Expected rate of return</label>
                                 <input type="text" (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                    class="form-control form-control-sm">
-                                <span class="text-danger">Stock Name is
-                                    Required</span>
+                                    (keypress)="numericDecimal($event)" class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row padding-1em">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Number of years</label>
                                 <input type="text" (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                    class="form-control form-control-sm">
-                                <span class="text-danger">Stock Name is
-                                    Required</span>
+                                    (keypress)="numericDecimal($event)" class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>
