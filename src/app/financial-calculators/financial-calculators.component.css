@@ -1,4 +1,12 @@
-.padding-1em{
+.padding-1em {
     padding-top: 0.5em;
     padding-bottom: 0.5em;
+}
+
+h3 {
+    color: #0d6efd;
+}
+
+mat-slider {
+    width: 100%;
 }

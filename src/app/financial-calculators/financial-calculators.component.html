@@ -1,37 +1,79 @@
 <div class="container" style="margin-top: 5em;">
     <mat-tab-group>
         <mat-tab label="Lump Sum Calculator">
-            <div>
-                <h1>Lump Sum Calculator</h1>
-                <form class="card" style="overflow-x: hidden!important;">
+            <div class="card" style="margin-top: 1.2em;">
+                <h3>Lump Sum Calculator</h3>
+                <form class="card" style="overflow-x: hidden!important;" [formGroup]="lumpsumForm">
                     <div class="row padding-1em">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Invested amount</label>
                                 <input type="text" (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                    (keypress)="numericDecimal($event)" class="form-control form-control-sm">
+                                    (keypress)="numericDecimal($event)" formControlName="principal" class="form-control form-control-sm">
                             </div>
+                        </div>
+                        <div class="col-md-6" style="margin-top: 0.8em;">
+                            <mat-slider min="0" max="5000000" step="1" (change)="principalSliderChanged($event)">
+                                <input matSliderThumb value="lumpsumForm.get('principal').value">
+                            </mat-slider>
                         </div>
                     </div>
                     <div class="row padding-1em">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Expected rate of return</label>
-                                <input type="text" (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                    (keypress)="numericDecimal($event)" class="form-control form-control-sm">
+                                <input type="text" (drop)="$event.preventDefault()" max="100" (paste)="$event.preventDefault()"
+                                    (keypress)="numericDecimal($event)" formControlName="rate" class="form-control form-control-sm">
                             </div>
+                        </div>
+
+                        <div class="col-md-6" style="margin-top: 0.8em;">
+                            <mat-slider min="0" max="30" step="0.1" (change)="rangeSliderChanged($event)">
+                                <input matSliderThumb [value] = "lumpsumForm.get('rate')?.value">
+                            </mat-slider>
                         </div>
                     </div>
                     <div class="row padding-1em">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Number of years</label>
-                                <input type="text" (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                    (keypress)="numericDecimal($event)" class="form-control form-control-sm">
+                                <input type="text" (drop)="$event.preventDefault()" max="50" (paste)="$event.preventDefault()"
+                                    (keypress)="numericDecimal($event)" formControlName="time" class="form-control form-control-sm">
                             </div>
+                        </div>
+                        <div class="col-md-6"  style="margin-top: 0.8em;">
+                            <mat-slider min="0" max="50" step="1" (change)="timeSliderChanged($event)">
+                                <input matSliderThumb [value]="lumpsumForm.get('time')?.value">
+                            </mat-slider>
                         </div>
                     </div>
                 </form>
+
+                <div class="card" style="margin-top:2em; overflow-x: hidden;">
+                    <h3>Summary</h3>
+                    <div class="row">
+                        <div class="col-sm-6">Accumulated Returns :</div>
+                        <div class="col-sm-6">{{returns}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">Accumulated wealth :</div>
+                        <div class="col-sm-6">{{totalAmount}}</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2em; overflow-x: hidden;">
+                    <h3>
+                        Insights
+                    </h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div echarts [options]="pieChartOptions" class="demo-chart"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div echarts [options]="yearwiseGraphChartOptions" class="demo-chart"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </mat-tab>
         <mat-tab label="SIP Calculator"> Content 2 </mat-tab>

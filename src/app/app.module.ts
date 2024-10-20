@@ -16,6 +16,7 @@ import {MatTableModule} from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatSliderModule} from '@angular/material/slider';
 import { AllocationSplitterComponent } from './allocation-splitter/allocation-splitter.component';
 import { LayoutModule } from './layout/layout.module';
 import { PortfolioTrackerComponent } from './portfolio-tracker/portfolio-tracker.component';
@@ -48,7 +49,8 @@ import { FinancialCalculatorsComponent } from './financial-calculators/financial
     MatTableModule,
     MatSortModule,
     MatIconModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSliderModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
