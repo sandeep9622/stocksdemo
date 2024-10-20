@@ -9,12 +9,14 @@
                             <div class="form-group">
                                 <label class="col-lg-6">Invested amount</label>
                                 <input type="text" (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                    (keypress)="numericDecimal($event)" formControlName="principal" class="form-control form-control-sm">
+                                    (keypress)="numericDecimal($event)" formControlName="principal"
+                                    class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="col-md-6" style="margin-top: 0.8em;">
-                            <mat-slider min="0" max="5000000" step="1" (change)="principalSliderChanged($event)">
-                                <input matSliderThumb value="lumpsumForm.get('principal').value">
+                            <mat-slider min="0" max="5000000" step="1" (change)="principalSliderChanged($event)"
+                                tabindex="-1">
+                                <input matSliderThumb [value]="lumpsumForm.get('principal')?.value" tabindex="-1">
                             </mat-slider>
                         </div>
                     </div>
@@ -22,14 +24,15 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Expected rate of return</label>
-                                <input type="text" (drop)="$event.preventDefault()" max="100" (paste)="$event.preventDefault()"
-                                    (keypress)="numericDecimal($event)" formControlName="rate" class="form-control form-control-sm">
+                                <input type="text" (drop)="$event.preventDefault()" max="100"
+                                    (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
+                                    formControlName="rate" class="form-control form-control-sm">
                             </div>
                         </div>
 
                         <div class="col-md-6" style="margin-top: 0.8em;">
-                            <mat-slider min="0" max="30" step="0.1" (change)="rangeSliderChanged($event)">
-                                <input matSliderThumb [value] = "lumpsumForm.get('rate')?.value">
+                            <mat-slider min="0" max="30" step="0.1" (change)="rangeSliderChanged($event)" tabindex="-1">
+                                <input matSliderThumb [value]="lumpsumForm.get('rate')?.value" tabindex="-1">
                             </mat-slider>
                         </div>
                     </div>
@@ -37,13 +40,14 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-lg-6">Number of years</label>
-                                <input type="text" (drop)="$event.preventDefault()" max="50" (paste)="$event.preventDefault()"
-                                    (keypress)="numericDecimal($event)" formControlName="time" class="form-control form-control-sm">
+                                <input type="text" (drop)="$event.preventDefault()" max="50"
+                                    (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
+                                    formControlName="time" class="form-control form-control-sm">
                             </div>
                         </div>
-                        <div class="col-md-6"  style="margin-top: 0.8em;">
-                            <mat-slider min="0" max="50" step="1" (change)="timeSliderChanged($event)">
-                                <input matSliderThumb [value]="lumpsumForm.get('time')?.value">
+                        <div class="col-md-6" style="margin-top: 0.8em;">
+                            <mat-slider min="0" max="50" step="1" (change)="timeSliderChanged($event)" tabindex="-1">
+                                <input matSliderThumb [value]="lumpsumForm.get('time')?.value" tabindex="-1">
                             </mat-slider>
                         </div>
                     </div>

@@ -50,9 +50,11 @@ export class FinancialCalculatorsComponent {
     if (time > 1) {
       let yearStepper = Math.round((time ? time : 1) / 10);
 
-      for (let i = 0; i < time; i += yearStepper) {
+      yearStepper = yearStepper <= 1 ? 1 : yearStepper;
+
+      for (let i = 0; i <= time; i += yearStepper) {
         labels.push(i <= 1 ? `${i} Year` : `${i} Years`);
-        data.push(Math.round(prinicpal * Math.pow((1 + rate / 100), i == 0 ? 1 : i)))
+        data.push(i == 0 ? prinicpal : Math.round(prinicpal * Math.pow((1 + rate / 100), i)))
       }
     }
     else {
@@ -90,7 +92,7 @@ export class FinancialCalculatorsComponent {
           name: 'Access From',
           type: 'pie',
           radius: ['40%', '70%'],
-          avoidLabelOverlap: true,
+          avoidLabelOverlap: false,
           label: {
             show: false,
             position: 'center'
@@ -98,7 +100,7 @@ export class FinancialCalculatorsComponent {
           emphasis: {
             label: {
               show: true,
-              fontSize: 40,
+              fontSize: 24,
               fontWeight: 'bold'
             }
           },
@@ -116,10 +118,17 @@ export class FinancialCalculatorsComponent {
     this.yearwiseGraphChartOptions = {
       xAxis: {
         type: 'category',
-        data: labels
+        data: labels,
+        axisLabel: {
+          interval: 0,
+          rotate: 45
+        }
       },
       yAxis: {
         type: 'value'
+      },
+      tooltip: {
+        trigger: 'item'
       },
       series: [
         {
