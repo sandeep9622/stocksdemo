@@ -32,7 +32,7 @@ export class PortfolioTrackerComponent {
   stocksList: Stock[] = [];
   submitted: boolean = false;
   isEdit: boolean = false;
-  displayedColumns: String[] = ["SerialNo", "stockName", "quantity", "price", "totalInvestment", "currentPrice", "currentValue", "marketCap", "sector", "actions"];
+  displayedColumns: String[] = ["SerialNo", "stockName", "quantity", "price", "totalInvestment", "currentPrice", "currentValue", "marketCap", "sector","returns", "actions"];
   dataSource!: MatTableDataSource<Stock>;
   localStorageName: string = 'StocksList';
 

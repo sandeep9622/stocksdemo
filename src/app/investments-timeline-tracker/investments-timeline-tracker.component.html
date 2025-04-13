@@ -1,0 +1,77 @@
+<div class="form-container" style="padding: 20px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 5px;">
+  <h2>Add Investment Record</h2>
+  <form [formGroup]="investmentForm" (ngSubmit)="onSaveRecord()" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
+    <!-- Month Dropdown -->
+    <div>
+      <label for="month" style="display: block; margin-bottom: 5px;">Month</label>
+      <select id="month" formControlName="month" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 200px;">
+        <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+      </select>
+    </div>
+
+    <!-- Year Dropdown -->
+    <div>
+      <label for="year" style="display: block; margin-bottom: 5px;">Year</label>
+      <select id="year" formControlName="year" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 200px;">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+
+    <!-- Amount Field -->
+    <div>
+      <label for="amount" style="display: block; margin-bottom: 5px;">Amount</label>
+      <input type="number" id="amount" formControlName="amount" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 200px;" step="0.01" />
+    </div>
+
+    <!-- Save Button -->
+    <div>
+      <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 16px;">
+        Save
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="upload-container" style="padding: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Upload Your Excel File</h2>
+    <div>
+      <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;" (change)="onFileSelected($event)">
+      <label for="fileInput" style="cursor: pointer; padding: 10px 20px; background-color: #007bff; color: white; border-radius: 5px; font-size: 16px;">
+        Choose File
+      </label>
+      <button (click)="onUpload()" style="margin-left: 10px; padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 16px;">
+        Upload
+      </button>
+    </div>
+  </div>
+  <p id="fileName" style="font-size: 14px; color: #555;">No file chosen</p>
+</div>
+
+<div class="table-container" style="padding: 20px;">
+  <p *ngIf="noRecordsMessage" style="text-align: center; color: red;">{{ noRecordsMessage }}</p>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *ngIf="records.length > 0">
+    <ng-container matColumnDef="month">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Month</th>
+      <td mat-cell *matCellDef="let record">{{ record.month }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="year">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Year</th>
+      <td mat-cell *matCellDef="let record">{{ record.year }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+      <td mat-cell *matCellDef="let record">{{ record.amount }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<!-- Chart Container -->
+<div id="chartContainer" style="width: 90%; margin: 0 5%; height: 70vh;"></div>

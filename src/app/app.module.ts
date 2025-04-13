@@ -21,6 +21,8 @@ import { AllocationSplitterComponent } from './allocation-splitter/allocation-sp
 import { LayoutModule } from './layout/layout.module';
 import { PortfolioTrackerComponent } from './portfolio-tracker/portfolio-tracker.component';
 import { FinancialCalculatorsComponent } from './financial-calculators/financial-calculators.component';
+import { InvestmentsTimelineTrackerComponent } from './investments-timeline-tracker/investments-timeline-tracker.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { FinancialCalculatorsComponent } from './financial-calculators/financial
     LoginComponent,
     AllocationSplitterComponent,
     PortfolioTrackerComponent,
-    FinancialCalculatorsComponent
+    FinancialCalculatorsComponent,
+    InvestmentsTimelineTrackerComponent
 
   ],
   imports: [
@@ -51,6 +54,7 @@ import { FinancialCalculatorsComponent } from './financial-calculators/financial
     MatIconModule,
     MatTabsModule,
     MatSliderModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
