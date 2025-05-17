@@ -29,6 +29,13 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  isExpanded: { [key: string]: boolean } = {
+    addInvestmentRecord: true,
+    uploadExcel: true,
+    investmentRecords: true,
+    chart: true
+  };
+
   constructor(private fb: FormBuilder, private httpService: HttpService) {}
 
   ngOnInit(): void {
@@ -417,5 +424,9 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
 
     // Call the original chart method with rolling data
     this.initChart(rollingData);
+  }
+
+  toggleSection(section: string): void {
+    this.isExpanded[section] = !this.isExpanded[section];
   }
 }
