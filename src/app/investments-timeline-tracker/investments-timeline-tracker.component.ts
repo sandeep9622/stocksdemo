@@ -152,27 +152,27 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
         const lowest = records.reduce((min, record) => (record.amount < min.amount ? record : min));
         const highest = records.reduce((max, record) => (record.amount > max.amount ? record : max));
 
-        // Add markers for lowest and highest points
+        // Add marker for the lowest point (red border)
         markPoints.push({
           coord: [lowest.index, lowest.amount],
           value: `${lowest.amount}`,
           symbol: 'circle',
           symbolSize: 20,
-          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'red', borderWidth: 2 },
           label: { show: true, position: 'bottom', formatter: `${lowest.amount}` }
         });
 
+        // Add marker for the highest point (green border)
         markPoints.push({
           coord: [highest.index, highest.amount],
           value: `${highest.amount}`,
           symbol: 'circle',
           symbolSize: 20,
-          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'green', borderWidth: 2 },
           label: { show: true, position: 'top', formatter: `${highest.amount}` }
         });
       });
     } else if (groupingLogic === 'rollingFromStart') {
-      // Start from the lowest month and calculate 12-month periods sequentially
       let startIndex = data.findIndex((record) => record.amount === Math.min(...amounts));
       while (startIndex < data.length) {
         const period = data.slice(startIndex, startIndex + 12).map((record, idx) => ({ ...record, index: startIndex + idx }));
@@ -180,30 +180,29 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
         const lowest = period.reduce((min, record) => (record.amount < min.amount ? record : min));
         const highest = period.reduce((max, record) => (record.amount > max.amount ? record : max));
 
-        // Add markers for lowest and highest points
+        // Add marker for the lowest point (red border)
         markPoints.push({
           coord: [lowest.index, lowest.amount],
           value: `${lowest.amount}`,
           symbol: 'circle',
           symbolSize: 20,
-          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'red', borderWidth: 2 },
           label: { show: true, position: 'bottom', formatter: `${lowest.amount}` }
         });
 
+        // Add marker for the highest point (green border)
         markPoints.push({
           coord: [highest.index, highest.amount],
           value: `${highest.amount}`,
           symbol: 'circle',
           symbolSize: 20,
-          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'green', borderWidth: 2 },
           label: { show: true, position: 'top', formatter: `${highest.amount}` }
         });
 
-        // Move to the next period (even if less than 12 months remain)
-        startIndex += 12;
+        startIndex += 12; // Move to the next period
       }
     } else if (groupingLogic === 'rollingFromEnd') {
-      // Start from the last month and calculate 12-month periods backward
       let startIndex = data.length - 1;
       while (startIndex >= 0) {
         const period = data.slice(Math.max(0, startIndex - 11), startIndex + 1).map((record, idx) => ({
@@ -214,26 +213,27 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
         const lowest = period.reduce((min, record) => (record.amount < min.amount ? record : min));
         const highest = period.reduce((max, record) => (record.amount > max.amount ? record : max));
 
-        // Add markers for lowest and highest points
+        // Add marker for the lowest point (red border)
         markPoints.push({
           coord: [lowest.index, lowest.amount],
           value: `${lowest.amount}`,
           symbol: 'circle',
           symbolSize: 20,
-          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'red', borderWidth: 2 },
           label: { show: true, position: 'bottom', formatter: `${lowest.amount}` }
         });
 
+        // Add marker for the highest point (green border)
         markPoints.push({
           coord: [highest.index, highest.amount],
           value: `${highest.amount}`,
           symbol: 'circle',
           symbolSize: 20,
-          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'green', borderWidth: 2 },
           label: { show: true, position: 'top', formatter: `${highest.amount}` }
         });
 
-        startIndex -= 12;
+        startIndex -= 12; // Move to the previous period
       }
     }
 
