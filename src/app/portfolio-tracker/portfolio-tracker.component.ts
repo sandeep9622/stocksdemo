@@ -48,6 +48,14 @@ export class PortfolioTrackerComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('TABLE') table!: ElementRef;
 
+  isExpanded = {
+    stocksForm: true,
+    stocksTable: true,
+    portfolio: true,
+    charts: true,
+    availableStocks:true
+  };
+
   constructor(public json: JSONService, private fb: UntypedFormBuilder, public service: UtilitiesService, private httpService: HttpService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -237,5 +245,9 @@ export class PortfolioTrackerComponent {
 
     /* save to file */
     XLSX.writeFile(wb, 'SheetJS.xlsx');
+  }
+
+  toggleSection(section: keyof typeof this.isExpanded) {
+    this.isExpanded[section] = !this.isExpanded[section];
   }
 }

@@ -23,6 +23,7 @@ import { PortfolioTrackerComponent } from './portfolio-tracker/portfolio-tracker
 import { FinancialCalculatorsComponent } from './financial-calculators/financial-calculators.component';
 import { InvestmentsTimelineTrackerComponent } from './investments-timeline-tracker/investments-timeline-tracker.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatIconModule,
     MatTabsModule,
     MatSliderModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]
