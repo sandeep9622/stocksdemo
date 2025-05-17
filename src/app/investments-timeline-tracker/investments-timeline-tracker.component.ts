@@ -242,8 +242,38 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
       tooltip: { trigger: 'axis' },
       xAxis: {
         type: 'category',
-        data: monthYearLabels,
-        axisLabel: { rotate: 45, formatter: (value: string) => value }
+        data: monthYearLabels, // Example: ['Jan 2024', 'Feb 2024', ..., 'Dec 2025']
+        axisLabel: {
+          formatter: (value: string) => {
+            const [month, year] = value.split(' ');
+            return `{month|${month}}\n{year|${year}}`; // Month on top, year below
+          },
+          rich: {
+            month: {
+              fontSize: 12,
+              color: '#000',
+            },
+            year: {
+              fontSize: 10,
+              color: '#888',
+            },
+          },
+          interval: 0, // Show all labels
+          rotate: 45, // Optional: Rotate labels for better readability
+        },
+        splitLine: {
+          show: true, // Add vertical lines to separate years
+          interval: (index: number) => {
+            // Add a line at the start of each year
+            const currentYear = monthYearLabels[index].split(' ')[1];
+            const previousYear = index > 0 ? monthYearLabels[index - 1].split(' ')[1] : null;
+            return currentYear !== previousYear;
+          },
+          lineStyle: {
+            color: '#ccc',
+            type: 'dashed',
+          },
+        },
       },
       yAxis: { type: 'value', name: 'Amount' },
       series: [
