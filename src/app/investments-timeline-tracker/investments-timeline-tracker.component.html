@@ -73,5 +73,20 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
+<!-- Dropdown for selecting the grouping logic -->
+<div style="padding: 20px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px;">
+  <label for="groupingLogic" style="font-size: 16px;">Select Grouping Logic:</label>
+  <select id="groupingLogic" (change)="onGroupingLogicChange($event)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+    <option value="calendarYear">Calendar Year</option>
+    <option value="rollingFromStart">Rolling from Start</option>
+    <option value="rollingFromEnd">Rolling from End</option>
+  </select>
+  <!-- Reload Icon -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <button (click)="initChart(records)" mat-icon-button class="btn btn-primary">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
+
 <!-- Chart Container -->
 <div id="chartContainer" style="width: 90%; margin: 0 5%; height: 70vh;"></div>

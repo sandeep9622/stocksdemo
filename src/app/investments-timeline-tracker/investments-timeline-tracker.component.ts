@@ -135,19 +135,21 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
       return value >= amounts[index - 1] ? 'green' : 'red'; // Green for upward, red for downward
     });
 
-    // Highlight lowest and highest points for each year
-    const markPoints = [];
-    const groupedByYear = data.reduce((acc, record, index) => {
-      const year = record.year;
-      if (!acc[year]) acc[year] = [];
-      acc[year].push({ ...record, index });
-      return acc;
-    }, {} as { [key: number]: { month: string; year: number; amount: number; index: number }[] });
+    // Highlight lowest and highest points for each custom 12-month period
+    const markPoints: any = [];
+    const customPeriods: { month: string; year: number; amount: number; index: number }[][] = [];
 
-    for (const year in groupedByYear) {
-      const yearData = groupedByYear[year];
-      const lowest = yearData.reduce((min, record) => (record.amount < min.amount ? record : min));
-      const highest = yearData.reduce((max, record) => (record.amount > max.amount ? record : max));
+    // Group data into custom 12-month periods
+    let startIndex = 0;
+    while (startIndex < data.length) {
+      const period = data.slice(startIndex, startIndex + 12);
+      customPeriods.push(period.map((record, index) => ({ ...record, index: startIndex + index })));
+      startIndex += 12; // Move to the next 12-month period
+    }
+
+    customPeriods.forEach((period) => {
+      const lowest = period.reduce((min, record) => (record.amount < min.amount ? record : min));
+      const highest = period.reduce((max, record) => (record.amount > max.amount ? record : max));
 
       // Add marker for the lowest point (transparent fill with border)
       markPoints.push({
@@ -184,7 +186,7 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
           formatter: `${highest.amount}`
         }
       });
-    }
+    });
 
     const option = {
       title: { text: 'Month-by-Month Growth', left: 'center' },
@@ -266,5 +268,82 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
     } else {
       alert('Please select a file before uploading.');
     }
+  }
+
+  onGroupingLogicChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedOption = selectElement.value;
+
+    if (selectedOption === 'calendarYear') {
+      this.initChartByCalendarYear(this.records);
+    } else if (selectedOption === 'rollingFromStart') {
+      this.initChartByRollingFromStart(this.records);
+    } else if (selectedOption === 'rollingFromEnd') {
+      this.initChartByRollingFromEnd(this.records);
+    }
+  }
+
+  initChartByCalendarYear(data: { month: string; year: number; amount: number }[]): void {
+    // Group data by calendar year
+    const groupedData: { year: number; amount: number }[] = [];
+    const yearMap = new Map<number, number>();
+
+    data.forEach((record) => {
+      if (!yearMap.has(record.year)) {
+        yearMap.set(record.year, 0);
+      }
+      yearMap.set(record.year, yearMap.get(record.year)! + record.amount);
+    });
+
+    yearMap.forEach((amount, year) => {
+      groupedData.push({ year, amount });
+    });
+
+    // Transform grouped data into the format required by the chart
+    const transformedData = groupedData.map((record) => ({
+      month: 'Year Total',
+      year: record.year,
+      amount: record.amount
+    }));
+
+    // Call the original chart method with transformed data
+    this.initChart(transformedData);
+  }
+
+  initChartByRollingFromStart(data: { month: string; year: number; amount: number }[]): void {
+    // Group data into rolling 12-month periods starting from the first month
+    const rollingData: { month: string; year: number; amount: number }[] = [];
+    for (let i = 0; i <= data.length - 12; i++) {
+      const period = data.slice(i, i + 12);
+      const totalAmount = period.reduce((sum, record) => sum + record.amount, 0);
+      rollingData.push({
+        month: period[0].month,
+        year: period[0].year,
+        amount: totalAmount
+      });
+    }
+
+    // Call the original chart method with rolling data
+    this.initChart(rollingData);
+  }
+
+  initChartByRollingFromEnd(data: { month: string; year: number; amount: number }[]): void {
+    // Group data into rolling 12-month periods starting from the last month
+    const rollingData: { month: string; year: number; amount: number }[] = [];
+    for (let i = data.length - 12; i >= 0; i--) {
+      const period = data.slice(i, i + 12);
+      const totalAmount = period.reduce((sum, record) => sum + record.amount, 0);
+      rollingData.push({
+        month: period[0].month,
+        year: period[0].year,
+        amount: totalAmount
+      });
+    }
+
+    // Reverse the rolling data to maintain chronological order
+    rollingData.reverse();
+
+    // Call the original chart method with rolling data
+    this.initChart(rollingData);
   }
 }
