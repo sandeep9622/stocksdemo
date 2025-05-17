@@ -121,7 +121,7 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
     );
   }
 
-  initChart(data: { month: string; year: number; amount: number }[]): void {
+  initChart(data: { month: string; year: number; amount: number }[], groupingLogic: string = 'calendarYear'): void {
     const chartDom = document.getElementById('chartContainer')!;
     const chart = echarts.init(chartDom);
 
@@ -135,91 +135,130 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
       return value >= amounts[index - 1] ? 'green' : 'red'; // Green for upward, red for downward
     });
 
-    // Highlight lowest and highest points for each custom 12-month period
+    // Highlight lowest and highest points based on grouping logic
     const markPoints: any = [];
-    const customPeriods: { month: string; year: number; amount: number; index: number }[][] = [];
 
-    // Group data into custom 12-month periods
-    let startIndex = 0;
-    while (startIndex < data.length) {
-      const period = data.slice(startIndex, startIndex + 12);
-      customPeriods.push(period.map((record, index) => ({ ...record, index: startIndex + index })));
-      startIndex += 12; // Move to the next 12-month period
+    if (groupingLogic === 'calendarYear') {
+      // Group data by calendar year
+      const yearMap = new Map<number, { month: string; year: number; amount: number; index: number }[]>();
+      data.forEach((record, index) => {
+        if (!yearMap.has(record.year)) {
+          yearMap.set(record.year, []);
+        }
+        yearMap.get(record.year)!.push({ ...record, index });
+      });
+
+      yearMap.forEach((records) => {
+        const lowest = records.reduce((min, record) => (record.amount < min.amount ? record : min));
+        const highest = records.reduce((max, record) => (record.amount > max.amount ? record : max));
+
+        // Add markers for lowest and highest points
+        markPoints.push({
+          coord: [lowest.index, lowest.amount],
+          value: `${lowest.amount}`,
+          symbol: 'circle',
+          symbolSize: 20,
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          label: { show: true, position: 'bottom', formatter: `${lowest.amount}` }
+        });
+
+        markPoints.push({
+          coord: [highest.index, highest.amount],
+          value: `${highest.amount}`,
+          symbol: 'circle',
+          symbolSize: 20,
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          label: { show: true, position: 'top', formatter: `${highest.amount}` }
+        });
+      });
+    } else if (groupingLogic === 'rollingFromStart') {
+      // Start from the lowest month and calculate 12-month periods sequentially
+      let startIndex = data.findIndex((record) => record.amount === Math.min(...amounts));
+      while (startIndex < data.length) {
+        const period = data.slice(startIndex, startIndex + 12).map((record, idx) => ({ ...record, index: startIndex + idx }));
+
+        const lowest = period.reduce((min, record) => (record.amount < min.amount ? record : min));
+        const highest = period.reduce((max, record) => (record.amount > max.amount ? record : max));
+
+        // Add markers for lowest and highest points
+        markPoints.push({
+          coord: [lowest.index, lowest.amount],
+          value: `${lowest.amount}`,
+          symbol: 'circle',
+          symbolSize: 20,
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          label: { show: true, position: 'bottom', formatter: `${lowest.amount}` }
+        });
+
+        markPoints.push({
+          coord: [highest.index, highest.amount],
+          value: `${highest.amount}`,
+          symbol: 'circle',
+          symbolSize: 20,
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          label: { show: true, position: 'top', formatter: `${highest.amount}` }
+        });
+
+        // Move to the next period (even if less than 12 months remain)
+        startIndex += 12;
+      }
+    } else if (groupingLogic === 'rollingFromEnd') {
+      // Start from the last month and calculate 12-month periods backward
+      let startIndex = data.length - 1;
+      while (startIndex >= 0) {
+        const period = data.slice(Math.max(0, startIndex - 11), startIndex + 1).map((record, idx) => ({
+          ...record,
+          index: Math.max(0, startIndex - 11) + idx
+        }));
+
+        const lowest = period.reduce((min, record) => (record.amount < min.amount ? record : min));
+        const highest = period.reduce((max, record) => (record.amount > max.amount ? record : max));
+
+        // Add markers for lowest and highest points
+        markPoints.push({
+          coord: [lowest.index, lowest.amount],
+          value: `${lowest.amount}`,
+          symbol: 'circle',
+          symbolSize: 20,
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          label: { show: true, position: 'bottom', formatter: `${lowest.amount}` }
+        });
+
+        markPoints.push({
+          coord: [highest.index, highest.amount],
+          value: `${highest.amount}`,
+          symbol: 'circle',
+          symbolSize: 20,
+          itemStyle: { color: 'rgba(255, 255, 255, 0)', borderColor: 'black', borderWidth: 2 },
+          label: { show: true, position: 'top', formatter: `${highest.amount}` }
+        });
+
+        startIndex -= 12;
+      }
     }
-
-    customPeriods.forEach((period) => {
-      const lowest = period.reduce((min, record) => (record.amount < min.amount ? record : min));
-      const highest = period.reduce((max, record) => (record.amount > max.amount ? record : max));
-
-      // Add marker for the lowest point (transparent fill with border)
-      markPoints.push({
-        coord: [lowest.index, lowest.amount],
-        value: `${lowest.amount}`,
-        symbol: 'circle', // Use a circle for the dot
-        symbolSize: 20, // Big dot size
-        itemStyle: {
-          color: 'rgba(255, 255, 255, 0)', // Transparent fill
-          borderColor: 'black', // Black border
-          borderWidth: 2 // Border width
-        },
-        label: {
-          show: true,
-          position: 'bottom', // Position the label below the dot
-          formatter: `${lowest.amount}`
-        }
-      });
-
-      // Add marker for the highest point (transparent fill with border)
-      markPoints.push({
-        coord: [highest.index, highest.amount],
-        value: `${highest.amount}`,
-        symbol: 'circle', // Use a circle for the dot
-        symbolSize: 20, // Big dot size
-        itemStyle: {
-          color: 'rgba(255, 255, 255, 0)', // Transparent fill
-          borderColor: 'black', // Black border
-          borderWidth: 2 // Border width
-        },
-        label: {
-          show: true,
-          position: 'top', // Position the label above the dot
-          formatter: `${highest.amount}`
-        }
-      });
-    });
 
     const option = {
       title: { text: 'Month-by-Month Growth', left: 'center' },
       tooltip: { trigger: 'axis' },
       xAxis: {
         type: 'category',
-        data: monthYearLabels, // Use combined month and year labels
-        axisLabel: {
-          rotate: 45, // Rotate labels for better readability
-          formatter: (value: string) => value // Optional: Customize label formatting
-        }
+        data: monthYearLabels,
+        axisLabel: { rotate: 45, formatter: (value: string) => value }
       },
-      yAxis: {
-        type: 'value',
-        name: 'Amount'
-      },
+      yAxis: { type: 'value', name: 'Amount' },
       series: [
         {
           data: amounts,
           type: 'line',
           smooth: true,
-          lineStyle: {
-            color: (params: any) => lineColors[params.dataIndex] // Set line color dynamically
-          },
-          itemStyle: {
-            color: (params: any) => lineColors[params.dataIndex] // Set point color dynamically
-          },
+          lineStyle: { color: (params: any) => lineColors[params.dataIndex] },
+          itemStyle: { color: (params: any) => lineColors[params.dataIndex] },
           areaStyle: {
             color: {
               type: 'linear',
               x: 0,
               y: 0,
-              x2: 1, // Horizontal gradient for vertical blocks
+              x2: 1,
               y2: 0,
               colorStops: amounts.map((value, index) => ({
                 offset: index / (amounts.length - 1),
@@ -228,10 +267,10 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
             }
           },
           markPoint: {
-            data: markPoints, // Highlight specific points with big dots
-            animation: true, // Enable animation for the dots
-            animationDuration: 1000, // Animation duration in milliseconds
-            animationEasing: 'elasticOut' // Easing effect for the animation
+            data: markPoints,
+            animation: true,
+            animationDuration: 1000,
+            animationEasing: 'elasticOut'
           }
         }
       ]
@@ -274,13 +313,16 @@ export class InvestmentsTimelineTrackerComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const selectedOption = selectElement.value;
 
-    if (selectedOption === 'calendarYear') {
-      this.initChartByCalendarYear(this.records);
-    } else if (selectedOption === 'rollingFromStart') {
-      this.initChartByRollingFromStart(this.records);
-    } else if (selectedOption === 'rollingFromEnd') {
-      this.initChartByRollingFromEnd(this.records);
-    }
+    // Call initChart with the selected grouping logic
+    this.initChart(this.records, selectedOption);
+  }
+
+  onReload(groupingDropdown: HTMLSelectElement): void {
+    // Reset the dropdown to the first option
+    groupingDropdown.value = 'calendarYear';
+
+    // Reload the chart with the default grouping logic
+    this.initChart(this.records, 'calendarYear');
   }
 
   initChartByCalendarYear(data: { month: string; year: number; amount: number }[]): void {

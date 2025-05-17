@@ -76,14 +76,13 @@
 <!-- Dropdown for selecting the grouping logic -->
 <div style="padding: 20px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px;">
   <label for="groupingLogic" style="font-size: 16px;">Select Grouping Logic:</label>
-  <select id="groupingLogic" (change)="onGroupingLogicChange($event)" style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+  <select id="groupingLogic" (change)="onGroupingLogicChange($event)" #groupingDropdown style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
     <option value="calendarYear">Calendar Year</option>
     <option value="rollingFromStart">Rolling from Start</option>
     <option value="rollingFromEnd">Rolling from End</option>
   </select>
-  <!-- Reload Icon -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <button (click)="initChart(records)" mat-icon-button class="btn btn-primary">
+  <!-- Reload Button -->
+  <button (click)="onReload(groupingDropdown)" mat-icon-button class="btn btn-primary" style="display: flex; align-items: center; justify-content: center;">
     <mat-icon>refresh</mat-icon>
   </button>
 </div>
