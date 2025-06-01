@@ -6,16 +6,37 @@ import { LoginComponent } from './login/login.component';
 import { PortfolioTrackerComponent } from './portfolio-tracker/portfolio-tracker.component';
 import { FinancialCalculatorsComponent } from './financial-calculators/financial-calculators.component';
 import { InvestmentsTimelineTrackerComponent } from './investments-timeline-tracker/investments-timeline-tracker.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'allocationsplitter', component: AllocationSplitterComponent },
-  { path: 'portfoliotracker', component: PortfolioTrackerComponent },
-  { path: 'financialcalculators', component: FinancialCalculatorsComponent },
-  { path: 'investmentstimeline', component: InvestmentsTimelineTrackerComponent },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },  // Updated this line
-  { path: '**', redirectTo: 'login' }  // Updated this line
+  { 
+    path: 'home', 
+    component: HomeComponent,
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'allocationsplitter', 
+    component: AllocationSplitterComponent,
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'portfoliotracker', 
+    component: PortfolioTrackerComponent,
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'financialcalculators', 
+    component: FinancialCalculatorsComponent,
+    canActivate: [AuthGuard]
+  },
+  { 
+    path: 'investmentstimeline', 
+    component: InvestmentsTimelineTrackerComponent,
+    canActivate: [AuthGuard]
+  },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({

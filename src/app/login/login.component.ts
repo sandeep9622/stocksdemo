@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 
@@ -12,10 +12,12 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage = '';
   showPassword = false;
-  isActive = false;  // for container active state
+  returnUrl: string = '/';
+  isActive = false;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private fb: FormBuilder,
     private authService: AuthService
   ) {
@@ -26,8 +28,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
   toggleContainer() {
     this.isActive = !this.isActive;
   }
@@ -36,16 +43,12 @@ export class LoginComponent implements OnInit {
     this.isActive = false;
   }
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
   onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
         next: () => {
-          this.router.navigate(['/home']);
+          this.router.navigateByUrl(this.returnUrl);
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'Login failed. Please try again.';
