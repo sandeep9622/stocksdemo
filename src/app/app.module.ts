@@ -9,7 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { LoginComponent } from './login/login.component';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
@@ -24,6 +24,7 @@ import { FinancialCalculatorsComponent } from './financial-calculators/financial
 import { InvestmentsTimelineTrackerComponent } from './investments-timeline-tracker/investments-timeline-tracker.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,13 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatPaginatorModule,
     MatExpansionModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

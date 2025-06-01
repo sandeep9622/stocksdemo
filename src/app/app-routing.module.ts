@@ -8,14 +8,14 @@ import { FinancialCalculatorsComponent } from './financial-calculators/financial
 import { InvestmentsTimelineTrackerComponent } from './investments-timeline-tracker/investments-timeline-tracker.component';
 
 const routes: Routes = [
-  {path:'home',component:HomeComponent},
-  {path:'login',component:LoginComponent},
-  {path:'allocationsplitter',component:AllocationSplitterComponent},
-  {path:'portfoliotracker',component:PortfolioTrackerComponent},
-  {path:'financialcalculators',component:FinancialCalculatorsComponent},
-  {path:'investmentstimeline',component:InvestmentsTimelineTrackerComponent}, // Add the new route
-  {path:'',redirectTo:'home',pathMatch:'full'},
-  {path:'**',redirectTo:'login'}
+  { path: 'home', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'allocationsplitter', component: AllocationSplitterComponent },
+  { path: 'portfoliotracker', component: PortfolioTrackerComponent },
+  { path: 'financialcalculators', component: FinancialCalculatorsComponent },
+  { path: 'investmentstimeline', component: InvestmentsTimelineTrackerComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },  // Updated this line
+  { path: '**', redirectTo: 'login' }  // Updated this line
 ];
 
 @NgModule({
