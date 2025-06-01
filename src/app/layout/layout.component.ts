@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
-export class LayoutComponent {
-  urlText: string = ''; // Current URL
+export class LayoutComponent implements OnInit {
+  urlText: string = '';
+  showNavbar = true;
 
   // Define navigation links dynamically
   navLinks = [
@@ -32,13 +34,20 @@ export class LayoutComponent {
     }
   ];
 
-  constructor(router: Router) {
-    // Listen to navigation events to update the active URL
-    router.events.pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((res) => {
-        if (res instanceof NavigationEnd) {
-          this.urlText = res.url; // Update the current URL
-        }
+  constructor(private router: Router, private authService: AuthService) {
+    // Listen to navigation events to update the active URL and navbar visibility
+    router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.urlText = event.url;
+        this.showNavbar = !event.url.includes('/login');
       });
+  }
+
+  ngOnInit(): void {
+  }
+
+  onLogout(): void {
+    this.authService.logout();
   }
 }

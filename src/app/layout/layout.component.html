@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="padding: 5px 10px; height: 50px;">
+<nav *ngIf="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark" style="padding: 5px 10px; height: 50px;">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="">Calc Utils</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -12,37 +12,32 @@
           <a class="nav-link" [ngClass]="{'active': urlText == link.path}" [routerLink]="link.path">{{ link.label }}</a>
         </li>
       </ul>
-      <div class="d-flex mb-2">
-        <!-- Dynamic External Links -->
-        <li class="nav-item mb-2" *ngFor="let extLink of externalLinks">
-          <a [href]="extLink.url" target="_blank" class="nav-link text-white me-2 mb-2">
+      <div class="d-flex align-items-center">
+        <!-- External Links -->
+        <li class="nav-item" *ngFor="let extLink of externalLinks">
+          <a [href]="extLink.url" target="_blank" class="nav-link text-white me-3">
             <svg *ngIf="extLink.icon === 'github'" width="20px" height="20px" viewBox="0 -3.5 256 256" xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMinYMin meet">
               <g fill="#ffffff">
-                <path
-                  d="M127.505 0C57.095 0 0 57.085 0 127.505c0 56.336 36.534 104.13 87.196 120.99 6.372 1.18 8.712-2.766 8.712-6.134 0-3.04-.119-13.085-.173-23.739-35.473 7.713-42.958-15.044-42.958-15.044-5.8-14.738-14.157-18.656-14.157-18.656-11.568-7.914.872-7.752.872-7.752 12.804.9 19.546 13.14 19.546 13.14 11.372 19.493 29.828 13.857 37.104 10.6 1.144-8.242 4.449-13.866 8.095-17.05-28.32-3.225-58.092-14.158-58.092-63.014 0-13.92 4.981-25.295 13.138-34.224-1.324-3.212-5.688-16.18 1.235-33.743 0 0 10.707-3.427 35.073 13.07 10.17-2.826 21.078-4.242 31.914-4.29 10.836.048 21.752 1.464 31.942 4.29 24.337-16.497 35.029-13.07 35.029-13.07 6.94 17.563 2.574 30.531 1.25 33.743 8.175 8.929 13.122 20.303 13.122 34.224 0 48.972-29.828 59.756-58.22 62.912 4.573 3.957 8.648 11.717 8.648 23.612 0 17.06-.148 30.791-.148 34.991 0 3.393 2.295 7.369 8.759 6.117 50.634-16.879 87.122-64.656 87.122-120.973C255.009 57.085 197.922 0 127.505 0" />
+                <path d="M127.505 0C57.095 0 0 57.085 0 127.505c0 56.336 36.534 104.13 87.196 120.99 6.372 1.18 8.712-2.766 8.712-6.134 0-3.04-.119-13.085-.173-23.739-35.473 7.713-42.958-15.044-42.958-15.044-5.8-14.738-14.157-18.656-14.157-18.656-11.568-7.914.872-7.752.872-7.752 12.804.9 19.546 13.14 19.546 13.14 11.372 19.493 29.828 13.857 37.104 10.6 1.144-8.242 4.449-13.866 8.095-17.05-28.32-3.225-58.092-14.158-58.092-63.014 0-13.92 4.981-25.295 13.138-34.224-1.324-3.212-5.688-16.18 1.235-33.743 0 0 10.707-3.427 35.073 13.07 10.17-2.826 21.078-4.242 31.914-4.29 10.836.048 21.752 1.464 31.942 4.29 24.337-16.497 35.029-13.07 35.029-13.07 6.94 17.563 2.574 30.531 1.25 33.743 8.175 8.929 13.122 20.303 13.122 34.224 0 48.972-29.828 59.756-58.22 62.912 4.573 3.957 8.648 11.717 8.648 23.612 0 17.06-.148 30.791-.148 34.991 0 3.393 2.295 7.369 8.759 6.117 50.634-16.879 87.122-64.656 87.122-120.973C255.009 57.085 197.922 0 127.505 0"/>
               </g>
             </svg>
-            <svg *ngIf="extLink.icon === 'linkedin'" fill="#ffffff" height="20px" width="20px" version="1.1" id="Layer_1"
-              xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 310 310"
-              xml:space="preserve">
+            <svg *ngIf="extLink.icon === 'linkedin'" fill="#ffffff" height="20px" width="20px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 310">
               <g id="XMLID_801_">
                 <path id="XMLID_802_" d="M72.16,99.73H9.927c-2.762,0-5,2.239-5,5v199.928c0,2.762,2.238,5,5,5H72.16c2.762,0,5-2.238,5-5V104.73
-                    C77.16,101.969,74.922,99.73,72.16,99.73z" />
-                <path id="XMLID_803_" d="M41.066,0.341C18.422,0.341,0,18.743,0,41.362C0,63.991,18.422,82.4,41.066,82.4
-                    c22.626,0,41.033-18.41,41.033-41.038C82.1,18.743,63.692,0.341,41.066,0.341z" />
-                <path id="XMLID_804_" d="M230.454,94.761c-24.995,0-43.472,10.745-54.679,22.954V104.73c0-2.761-2.238-5-5-5h-59.599
-                    c-2.762,0-5,2.239-5,5v199.928c0,2.762,2.238,5,5,5h62.097c2.762,0,5-2.238,5-5v-98.918c0-33.333,9.054-46.319,32.29-46.319
-                    c25.306,0,27.317,20.818,27.317,48.034v97.204c0,2.762,2.238,5,5,5H305c2.762,0,5-2.238,5-5V194.995
-                    C310,145.43,300.549,94.761,230.454,94.761z" />
+                    C77.16,101.969,74.922,99.73,72.16,99.73z"/>
               </g>
             </svg>
           </a>
         </li>
+        <!-- Logout Button -->
+        <button class="btn btn-outline-light ms-3" (click)="onLogout()">
+          <span class="material-icons">logout</span>
+          Logout
+        </button>
       </div>
     </div>
   </div>
 </nav>
-<div style="overflow-y: auto; max-height: calc(100vh - 50px);">
-  <router-outlet></router-outlet>
-</div>
+
+<router-outlet></router-outlet>
