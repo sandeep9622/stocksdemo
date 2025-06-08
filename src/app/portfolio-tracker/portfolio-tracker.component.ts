@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -50,8 +50,9 @@ export class PortfolioTrackerComponent {
   chartOptionBar: EChartsOption = {};
   chartOptionCompare: EChartsOption = {};
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('TABLE') table!: ElementRef;
+  @ViewChild('TABLE', { static: false }) table!: ElementRef;
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
+  @ViewChild('stockFormDialog') stockFormDialog!: TemplateRef<any>;
 
   isExpanded = {
     stocksForm: true,
@@ -61,13 +62,27 @@ export class PortfolioTrackerComponent {
     availableStocks: true
   };
 
-  constructor(public json: JSONService, private fb: UntypedFormBuilder, public service: UtilitiesService, private httpService: HttpService, public dialog: MatDialog) { }
+  constructor(
+    public json: JSONService,
+    private fb: UntypedFormBuilder,
+    public service: UtilitiesService,
+    private httpService: HttpService,
+    public dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.BindStocks();
   }
 
   get s() { return this.stocksForm.controls }
+
+  openStockForm() {
+    this.isEdit = false;
+    this.stocksForm.reset();
+    this.dialog.open(this.stockFormDialog, {
+      width: '80%'
+    });
+  }
 
   Save() {
     this.submitted = true;
@@ -86,9 +101,9 @@ export class PortfolioTrackerComponent {
   Edit(item: any) {
     this.isEdit = true;
     this.stocksForm.patchValue(item);
-    if (this.tabGroup) {
-      this.tabGroup.selectedIndex = 0; // Switch to Stocks Form tab
-    }
+    this.dialog.open(this.stockFormDialog, {
+      width: '80%'
+    });
   }
 
   Update() {
@@ -124,6 +139,7 @@ export class PortfolioTrackerComponent {
     this.stocksForm.reset();
     this.submitted = false;
     this.isEdit = false;
+    this.dialog.closeAll();
   }
 
   BindStocks() {
@@ -246,12 +262,26 @@ export class PortfolioTrackerComponent {
   }
 
   exportAsExcel() {
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+    // Export only the data, not the DOM table, to avoid issues with Angular Material tables
+    const dataToExport = this.stocksList.map((stock, i) => ({
+      'No.': i + 1,
+      'Stock Name': stock.stockName,
+      'Price': stock.price,
+      'Quantity': stock.quantity,
+      'Total Investment': stock.totalInvestment,
+      'Current Price': stock.currentPrice,
+      'Current Value': stock.currentValue,
+      'Market Cap': stock.marketCap,
+      'Sector': stock.sector,
+      '1Y Returns (%)': stock.oneYearReturns,
+      '3Y Returns (%)': stock.threeYearReturns,
+      '5Y Returns (%)': stock.fiveYearReturns,
+      'Total Gains/Loss': stock.returns
+    }));
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    /* save to file */
-    XLSX.writeFile(wb, 'SheetJS.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Portfolio');
+    XLSX.writeFile(wb, 'Portfolio.xlsx');
   }
 
   toggleSection(section: keyof typeof this.isExpanded) {
