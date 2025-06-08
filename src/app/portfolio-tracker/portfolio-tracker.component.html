@@ -1,112 +1,46 @@
 <div class="container-fluid" style="margin-top: 2em;">
     <mat-tab-group>
-        <mat-tab label="Stocks Form">
+        <mat-tab label="Dashboard">
             <div class="card mb-3">
                 <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <button type="button" class="btn btn-primary" *ngIf="!isEdit" (click)="Save()">Save</button>
-                            <button type="button" class="btn btn-primary" *ngIf="isEdit" (click)="Update()">Update</button>
-                            <button type="button" class="btn btn-secondary" (click)="Cancel()">cancel</button>
+                    <div class="row">
+                        <h4>Available Stocks</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div echarts [options]="chartOptionBar" class="demo-chart"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div echarts [options]="chartOption" class="demo-chart"></div>
                         </div>
                     </div>
-                    <form class="card" [formGroup]="stocksForm">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-lg-6">Stock Name</label>
-                                    <input type="text" formControlName="stockName" (drop)="$event.preventDefault()"
-                                        (paste)="$event.preventDefault()" class="form-control form-control-sm">
-                                    <span class="text-danger" *ngIf="submitted && s.stockName.errors?.required">Stock Name is
-                                        Required</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Buy Price</label>
-                                    <input type="text" formControlName="price" (blur)="calculateTotalInvestment()"
-                                        (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                        (keypress)="numericDecimal($event)" class="form-control form-control-sm">
-                                    <span class="text-danger" *ngIf="submitted && s.price.errors?.required">Buy Price is
-                                        Required</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div>
-                                    <label for="">Quantity</label>
-                                    <input type="text" formControlName="quantity" (blur)="calculateTotalInvestment()"
-                                        (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
-                                        (keypress)="onlyNumeric($event)" class="form-control form-control-sm">
-                                    <span class="text-danger" *ngIf="submitted && s.quantity.errors?.required">Quantity is
-                                        Required</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="col-lg-6">Sector</label>
-                                    <input type="text" formControlName="sector" (drop)="$event.preventDefault()"
-                                        (paste)="$event.preventDefault()" class="form-control form-control-sm">
-                                    <span class="text-danger" *ngIf="submitted && s.sector.errors?.required">Sector is
-                                        Required</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Market Cap</label>
-                                    <input type="text" formControlName="marketCap" (drop)="$event.preventDefault()"
-                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
-                                        class="form-control form-control-sm">
-                                    <span class="text-danger" *ngIf="submitted && s.marketCap.errors?.required">Market Cap is
-                                        Required</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div>
-                                    <label for="">Total Investment</label>
-                                    <input type="text" formControlName="totalInvestment" (drop)="$event.preventDefault()"
-                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
-                                        class="form-control form-control-sm">
-                                    <span class="text-danger" *ngIf="submitted && s.totalInvestment.errors?.required">Total
-                                        Investment
-                                        is Required</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="">Current Price</label>
-                                <input type="text" formControlName="currentPrice" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>1 Year Returns (%)</label>
-                                    <input type="text" formControlName="oneYearReturns" (drop)="$event.preventDefault()"
-                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
-                                        class="form-control form-control-sm">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>3 Year Returns (%)</label>
-                                    <input type="text" formControlName="threeYearReturns" (drop)="$event.preventDefault()"
-                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
-                                        class="form-control form-control-sm">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>5 Year Returns (%)</label>
-                                    <input type="text" formControlName="fiveYearReturns" (drop)="$event.preventDefault()"
-                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
-                                        class="form-control form-control-sm">
-                                </div>
-                            </div>
+                    <div class="row mt-4">
+                        <h4>Comparison</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div echarts [options]="chartOptionCompare" class="demo-chart"></div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </mat-tab>
-        <mat-tab label="Available Stocks">
+        <mat-tab label="Portfolio Details">
             <div class="card mb-3">
                 <div class="card-body">
+                    <!-- Allocation summary moved here -->
+                    <div class="row">
+                        <div class="col-sm-6">Number of Stocks</div>
+                        <div class="col-sm-6">{{stocksList.length}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">Total Investments</div>
+                        <div class="col-sm-6">{{totalAmount}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">Current Value</div>
+                        <div class="col-sm-6">{{currentValue}}</div>
+                    </div>
                     <div class="d-flex justify-content-end">
                         <button class="excel-button btn btn-primary" (click)="exportAsExcel()" style="margin-top: 1em;">
                             <mat-icon aria-hidden="false" aria-label="icon name">save_alt</mat-icon>
@@ -218,46 +152,107 @@
                 </div>
             </div>
         </mat-tab>
-        <mat-tab label="Portfolio">
+        <mat-tab label="Stocks Form">
             <div class="card mb-3">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">Number of Stocks</div>
-                        <div class="col-sm-6">{{stocksList.length}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">Total Investments</div>
-                        <div class="col-sm-6">{{totalAmount}}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">Current Value</div>
-                        <div class="col-sm-6">{{currentValue}}</div>
-                    </div>
-                </div>
-            </div>
-        </mat-tab>
-        <mat-tab label="Charts">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <h4>Available Stocks</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div echarts [options]="chartOptionBar" class="demo-chart"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div echarts [options]="chartOption" class="demo-chart"></div>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <h4>Comparison</h4>
-                    </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col">
-                            <div echarts [options]="chartOptionCompare" class="demo-chart"></div>
+                            <button type="button" class="btn btn-primary" *ngIf="!isEdit" (click)="Save()">Save</button>
+                            <button type="button" class="btn btn-primary" *ngIf="isEdit" (click)="Update()">Update</button>
+                            <button type="button" class="btn btn-secondary" (click)="Cancel()">cancel</button>
                         </div>
                     </div>
+                    <form class="card" [formGroup]="stocksForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-lg-6">Stock Name</label>
+                                    <input type="text" formControlName="stockName" (drop)="$event.preventDefault()"
+                                        (paste)="$event.preventDefault()" class="form-control form-control-sm">
+                                    <span class="text-danger" *ngIf="submitted && s.stockName.errors?.required">Stock Name is
+                                        Required</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Buy Price</label>
+                                    <input type="text" formControlName="price" (blur)="calculateTotalInvestment()"
+                                        (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
+                                        (keypress)="numericDecimal($event)" class="form-control form-control-sm">
+                                    <span class="text-danger" *ngIf="submitted && s.price.errors?.required">Buy Price is
+                                        Required</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>
+                                    <label for="">Quantity</label>
+                                    <input type="text" formControlName="quantity" (blur)="calculateTotalInvestment()"
+                                        (drop)="$event.preventDefault()" (paste)="$event.preventDefault()"
+                                        (keypress)="onlyNumeric($event)" class="form-control form-control-sm">
+                                    <span class="text-danger" *ngIf="submitted && s.quantity.errors?.required">Quantity is
+                                        Required</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="col-lg-6">Sector</label>
+                                    <input type="text" formControlName="sector" (drop)="$event.preventDefault()"
+                                        (paste)="$event.preventDefault()" class="form-control form-control-sm">
+                                    <span class="text-danger" *ngIf="submitted && s.sector.errors?.required">Sector is
+                                        Required</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Market Cap</label>
+                                    <input type="text" formControlName="marketCap" (drop)="$event.preventDefault()"
+                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
+                                        class="form-control form-control-sm">
+                                    <span class="text-danger" *ngIf="submitted && s.marketCap.errors?.required">Market Cap is
+                                        Required</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>
+                                    <label for="">Total Investment</label>
+                                    <input type="text" formControlName="totalInvestment" (drop)="$event.preventDefault()"
+                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
+                                        class="form-control form-control-sm">
+                                    <span class="text-danger" *ngIf="submitted && s.totalInvestment.errors?.required">Total
+                                        Investment
+                                        is Required</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="">Current Price</label>
+                                <input type="text" formControlName="currentPrice" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>1 Year Returns (%)</label>
+                                    <input type="text" formControlName="oneYearReturns" (drop)="$event.preventDefault()"
+                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
+                                        class="form-control form-control-sm">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>3 Year Returns (%)</label>
+                                    <input type="text" formControlName="threeYearReturns" (drop)="$event.preventDefault()"
+                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
+                                        class="form-control form-control-sm">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>5 Year Returns (%)</label>
+                                    <input type="text" formControlName="fiveYearReturns" (drop)="$event.preventDefault()"
+                                        (paste)="$event.preventDefault()" (keypress)="numericDecimal($event)"
+                                        class="form-control form-control-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </mat-tab>

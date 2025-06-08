@@ -11,6 +11,7 @@ import { UtilitiesService } from '../services/utilities.service';
 import { ConfirmationBoxComponent } from '../shared/confirmation-box/confirmation-box.component';
 import { MatTableDataSource } from '@angular/material/table';
 import * as XLSX from 'xlsx';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-portfolio-tracker',
@@ -50,6 +51,7 @@ export class PortfolioTrackerComponent {
   chartOptionCompare: EChartsOption = {};
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('TABLE') table!: ElementRef;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 
   isExpanded = {
     stocksForm: true,
@@ -82,9 +84,11 @@ export class PortfolioTrackerComponent {
   }
 
   Edit(item: any) {
-    debugger
     this.isEdit = true;
     this.stocksForm.patchValue(item);
+    if (this.tabGroup) {
+      this.tabGroup.selectedIndex = 0; // Switch to Stocks Form tab
+    }
   }
 
   Update() {
