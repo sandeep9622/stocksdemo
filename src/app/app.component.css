@@ -1,0 +1,26 @@
+/* Negative Returns (Red Shades) */
+.neg-1  { background-color: rgb(134,13,13); }
+.neg-2  { background-color: rgb(147,38,38); }
+.neg-3  { background-color: rgb(160,64,64); }
+.neg-4  { background-color: rgb(172,89,89); }
+.neg-5  { background-color: rgb(185,115,115); }
+.neg-6  { background-color: rgb(198,140,140); }
+.neg-7  { background-color: rgb(211,166,166); }
+.neg-8  { background-color: rgb(223,191,191); }
+.neg-9  { background-color: rgb(236,217,217); }
+.neg-10 { background-color: rgb(249,242,242); }
+
+/* Positive Returns (Green Shades) */
+.pos-1  { background-color: rgb(242,249,242); }
+.pos-2  { background-color: rgb(217,236,217); }
+.pos-3  { background-color: rgb(191,223,191); }
+.pos-4  { background-color: rgb(166,211,166); }
+.pos-5  { background-color: rgb(140,198,140); }
+.pos-6  { background-color: rgb(115,185,115); }
+.pos-7  { background-color: rgb(89,172,89); }
+.pos-8  { background-color: rgb(64,160,64); }
+.pos-9  { background-color: rgb(38,147,38); }
+.pos-10 { background-color: rgb(13,134,13); }
+
+/* Zero (White) */
+.zero   { background-color: rgb(255,255,255); }

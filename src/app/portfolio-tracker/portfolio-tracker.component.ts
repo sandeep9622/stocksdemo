@@ -26,13 +26,16 @@ export class PortfolioTrackerComponent {
     marketCap: ['', [Validators.required]],
     totalInvestment: ['', [Validators.required]],
     currentPrice: [''],
+    oneYearReturns: [''],
+    threeYearReturns: [''],
+    fiveYearReturns: [''],
     id: [{ value: '', disabled: true }]
   });
 
   stocksList: Stock[] = [];
   submitted: boolean = false;
   isEdit: boolean = false;
-  displayedColumns: String[] = ["SerialNo", "stockName", "quantity", "price", "totalInvestment", "currentPrice", "currentValue", "marketCap", "sector","returns", "actions"];
+  displayedColumns: String[] = ["SerialNo", "stockName", "quantity", "price", "totalInvestment", "currentPrice", "currentValue", "marketCap", "sector", "oneYearReturns", "threeYearReturns", "fiveYearReturns", "returns", "actions"];
   dataSource!: MatTableDataSource<Stock>;
   localStorageName: string = 'StocksList';
 
@@ -53,7 +56,7 @@ export class PortfolioTrackerComponent {
     stocksTable: true,
     portfolio: true,
     charts: true,
-    availableStocks:true
+    availableStocks: true
   };
 
   constructor(public json: JSONService, private fb: UntypedFormBuilder, public service: UtilitiesService, private httpService: HttpService, public dialog: MatDialog) { }
@@ -249,5 +252,36 @@ export class PortfolioTrackerComponent {
 
   toggleSection(section: keyof typeof this.isExpanded) {
     this.isExpanded[section] = !this.isExpanded[section];
+  }
+
+  getColorClass(value: number): string {
+    if (value === null || value === undefined) return '';
+    if (value === 0) return 'zero';
+
+    // Negative ranges
+    if (value < 0) {
+      if (value <= -24.507) return 'neg-1';
+      if (value <= -21.784) return 'neg-2';
+      if (value <= -19.061) return 'neg-3';
+      if (value <= -16.338) return 'neg-4';
+      if (value <= -13.615) return 'neg-5';
+      if (value <= -10.892) return 'neg-6';
+      if (value <= -8.169) return 'neg-7';
+      if (value <= -5.446) return 'neg-8';
+      if (value <= -2.723) return 'neg-9';
+      return 'neg-10';
+    }
+
+    // Positive ranges
+    if (value <= 73.599) return 'pos-1';
+    if (value <= 147.198) return 'pos-2';
+    if (value <= 220.797) return 'pos-3';
+    if (value <= 294.396) return 'pos-4';
+    if (value <= 367.995) return 'pos-5';
+    if (value <= 441.594) return 'pos-6';
+    if (value <= 515.193) return 'pos-7';
+    if (value <= 588.792) return 'pos-8';
+    if (value <= 662.391) return 'pos-9';
+    return 'pos-10';
   }
 }
