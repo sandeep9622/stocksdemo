@@ -193,12 +193,26 @@ export class PortfolioTrackerComponent {
 
       this.chartOption = {
         tooltip: {
-          trigger: 'item'
+          trigger: 'item',
+          formatter: function(params: any) {
+            // Show name and value in tooltip
+            return params.name + '<br/>' + params.value.toFixed(2);
+          }
         },
         series: {
           type: 'pie',
           radius: '60%',
           data: datalist,
+          label: {
+            show: true,
+            formatter: function(params: any) {
+              // Show stock name and value below in brackets
+              return params.name + '\n(' + params.value.toFixed(2) + ')';
+            },
+            color: '#000',
+            fontWeight: 'normal',
+            fontSize: 13
+          },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -217,18 +231,25 @@ export class PortfolioTrackerComponent {
             rotate: 45
           }
         },
-        yAxis: {
-
-        },
-
+        yAxis: {},
         tooltip: {
           trigger: 'item'
         },
-        series:
-        {
-          type: 'bar',
-          data: this.stocksList.map(x => x.totalInvestment),
-        }
+        series: [
+          {
+            type: 'bar',
+            data: this.stocksList.map(x => Number(x.totalInvestment.toFixed(2))),
+            label: {
+              show: true,
+              position: 'inside',
+              rotate: 90,
+              color: '#000',
+              fontWeight: 'bold',
+              fontSize: 13,
+              formatter: function(params: any) { return Number(params.value).toFixed(2); }
+            }
+          }
+        ]
       };
 
 
@@ -240,21 +261,48 @@ export class PortfolioTrackerComponent {
             rotate: 45
           }
         },
-        yAxis: {
-
-        },
-
+        yAxis: {},
         tooltip: {
           trigger: 'item'
         },
+        legend: {
+          data: ['Invested Amount', 'Current Value'],
+          top: '5%',
+          right: '5%',
+          orient: 'horizontal',
+          textStyle: {
+            fontWeight: 'bold',
+            fontSize: 14
+          }
+        },
         series: [
           {
+            name: 'Invested Amount',
             type: 'bar',
-            data: this.stocksList.map(x => x.totalInvestment),
+            data: this.stocksList.map(x => Number(x.totalInvestment.toFixed(2))),
+            label: {
+              show: true,
+              position: 'inside',
+              rotate: 90,
+              color: '#000',
+              fontWeight: 'bold',
+              fontSize: 13,
+              formatter: function(params: any) { return Number(params.value).toFixed(2); }
+            }
           },
           {
+            name: 'Current Value',
             type: 'bar',
-            data: this.stocksList.map(x => x.currentPrice * x.quantity)
+            data: this.stocksList.map(x => Number((x.currentPrice * x.quantity).toFixed(2))),
+            label: {
+              show: true,
+              position: 'inside',
+              rotate: 90,
+              color: '#000',
+              fontWeight: 'bold',
+              fontSize: 13,
+              formatter: function(params: any) { return Number(params.value).toFixed(2); }
+            }
           }
         ]
       };
