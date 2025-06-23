@@ -35,7 +35,7 @@ const routes: Routes = [
     component: InvestmentsTimelineTrackerComponent,
     canActivate: [AuthGuard]
   },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];
 
