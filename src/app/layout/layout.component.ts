@@ -40,7 +40,7 @@ export class LayoutComponent implements OnInit {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.urlText = event.url;
-        this.showNavbar = !event.url.includes('/login');
+        this.showNavbar = (event.url !== '/login' && event.url !== '/login/' && event.url !== '/' && event.url !== '');
       });
   }
 
