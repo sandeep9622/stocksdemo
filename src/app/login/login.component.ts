@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
         next: () => {
-          this.router.navigateByUrl(this.returnUrl);
+          this.router.navigateByUrl((!this.returnUrl || this.returnUrl === '/' || this.returnUrl === '/login') ? '/home' : this.returnUrl);
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'Login failed. Please try again.';
